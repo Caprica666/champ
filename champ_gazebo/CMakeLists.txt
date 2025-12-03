@@ -8,16 +8,13 @@ find_package(rclcpp REQUIRED)
 find_package(urdf REQUIRED)
 find_package(champ REQUIRED)
 find_package(champ_msgs REQUIRED)
-find_package(gazebo_ros2_control REQUIRED)
-find_package(gazebo_ros REQUIRED)
+
 
 set(dependencies
   rclcpp
   urdf
   champ
   champ_msgs
-  gazebo_ros2_control
-  gazebo_ros
 )
 
 install(PROGRAMS
@@ -35,14 +32,11 @@ include_directories(
   ${GAZEBO_INCLUDE_DIRS}
 )
 
-add_executable(contact_sensor src/contact_sensor.cpp)
-target_link_libraries(contact_sensor ${GAZEBO_LIBRARIES})
-ament_target_dependencies(contact_sensor ${dependencies})
+#add_executable(contact_sensor src/contact_sensor.cpp)
+#target_link_libraries(contact_sensor ${GAZEBO_LIBRARIES})
+#ament_target_dependencies(contact_sensor ${dependencies})
 
-install(TARGETS 
-  contact_sensor
-    DESTINATION lib/${PROJECT_NAME}
-)
+##install(TARGETS contact_sensor DESTINATION lib/${PROJECT_NAME})
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY worlds DESTINATION share/${PROJECT_NAME})
