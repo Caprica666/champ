@@ -1,59 +1,45 @@
 
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(champ_gazebo)
 
 add_compile_options(-std=c++17)
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
 
-find_package(gazebo REQUIRED)
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclpy REQUIRED)
+find_package(champ_msgs REQUIRED) 
+find_package(champ REQUIRED) 
 
-find_package(catkin 
-  REQUIRED 
-  COMPONENTS
-  roscpp
-  urdf
-  champ
-  champ_msgs
-)
-
-catkin_package(
-   CATKIN_DEPENDS 
-   roscpp
+install(
+  DIRECTORY
+  launch
+  config
+  DESTINATION share/${PROJECT_NAME}
 )
 
 install(PROGRAMS
   scripts/imu_sensor.py
   scripts/odometry_tf.py
   scripts/odometry.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  DESTINATION lib/${PROJECT_NAME}
 )
 
-include_directories(
-  include
-  ${champ_INCLUDE_DIRS}
-  ${champ_INCLUDE_DIRS}/champ/
-  ${champ_INCLUDE_DIRS}/champ/champ/
-  ${catkin_INCLUDE_DIRS}
-  ${GAZEBO_INCLUDE_DIRS}
+#add_library(contact_sensor SHARED src/contact_sensor.cpp)
+#ament_target_dependencies(contact_sensor ${dependencies})
+#target_link_libraries(contact_sensor)
+
+#install(TARGETS contact_sensorDESTINATION lib/${PROJECT_NAME})
+
+set(dependencies
+  rclcpp
+  rclpy
+  champ
+  champ_msgs
+  urdf
 )
 
-link_directories(${GAZEBO_LIBRARY_DIRS} ${catkin_LIBRARIES})
-add_compile_options("${GAZEBO_CXX_FLAGS}")
-
-add_executable(contact_sensor src/contact_sensor.cpp)
-target_link_libraries(contact_sensor ${GAZEBO_LIBRARIES} pthread ${catkin_LIBRARIES} )
-add_dependencies(contact_sensor ${catkin_EXPORTED_TARGETS})
-
-install(TARGETS 
-    contact_sensor
-    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-install(DIRECTORY launch config
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
-
-install(DIRECTORY worlds/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/worlds
-)
+ament_export_dependencies(${dependencies})
+ament_package()

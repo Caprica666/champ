@@ -1,30 +1,35 @@
-frequency: 50
+base_to_footprint_ekf:
+  ros__parameters:
+    frequency: 50.0
+    publish_tf: true
+    transform_timeout: 0.01
+    transform_time_offset: 0.045
+    two_d_mode: false
+    # diagnostics_agg: true
 
-transform_timeout: 0.01
-transform_time_offset: 0.045
+    #x     , y     , z,
+    #roll  , pitch , yaw,
+    #vx    , vy    , vz,
+    #vroll , vpitch, vyaw,
+    #ax    , ay    , az
 
-two_d_mode: false
-# diagnostics_agg: true
+    pose0: base_to_footprint_pose
+    pose0_config: [true,  true,  true,  # X, Y, Z
+                  true,  true,  true,   # roll, pitch, yaw
+                  false, false, false,  # X_velocity, Y_velocity, Z_velocity
+                  false, false, false,  # roll_velocity, pitch_velocity, yaw_velocity
+                  false, false, false]  # X_acceleration, Y_acceleration, Z_acceleration
 
-#x     , y     , z,
-#roll  , pitch , yaw,
-#vx    , vy    , vz,
-#vroll , vpitch, vyaw,
-#ax    , ay    , az
-
-pose0: base_to_footprint_pose
-pose0_config: [true,  true,  true,
-               true,  true,  true,
-               false, false, false,
-               false, false, false,
-               false, false, false]
-
-imu0: imu/data
-imu0_config: [false, false, false,
-              false, false, false,
-              true, true, true,
-              false, false, false,
-              false, false, false]
-
-odom_frame: base_footprint
-world_frame: base_footprint
+    imu0: imu/data
+    # imu0_config: [false, false, false,
+    #               false, false, false,
+    #               true, true, true,
+    #               false, false, false,
+    #               false, false, false]
+    imu0_config: [false, false, false,  # X, Y, Z
+                  true, true, true,     # roll, pitch, yaw
+                  false, false, false,  # X_velocity, Y_velocity, Z_velocity
+                  true, true, true,     # roll_velocity, pitch_velocity, yaw_velocity
+                  true, true, true]     # X_acceleration, Y_acceleration, Z_acceleration
+    odom_frame: base_footprint
+    world_frame: base_footprint
