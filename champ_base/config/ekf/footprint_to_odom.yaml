@@ -14,40 +14,19 @@ footprint_to_odom_ekf:
     #ax    , ay    , az
 
     odom0: odom/raw
-    odom0_config: [false, false, false, # X, Y, Z
-                  false, false, false,  # roll, pitch, yaw
-                  true,  true, false,   # X_velocity, Y_velocity, Z_velocity
-                  false, false, true,   # roll_velocity, pitch_velocity, yaw_velocity
-                  false, false, false]  # X_acceleration, Y_acceleration, Z_acceleration
+    odom0_config: [false, false, false,
+                  false, false, false,
+                    true,  true, false,
+                  false, false, true,
+                  false, false, false]
 
     imu0: imu/data
-    imu0_config: [false, false, false, # X, Y, Z
-                  false, false, true,  # roll, pitch, yaw
-                  false, false, false, # X_velocity, Y_velocity, Z_velocity
-                  false, false, true,  # roll_velocity, pitch_velocity, yaw_velocity
-                  false, false, false] # X_acceleration, Y_acceleration, Z_acceleration
+    imu0_config: [false, false, false,
+                  false, false, true,
+                  false, false, false,
+                  false, false,  true,
+                  false, false, false]
 
     odom_frame: odom
     base_link_frame: base_footprint
     world_frame: odom
-
-# [ADVANCED] When measuring one pose variable with two sensors, a situation can arise in which both sensors under-
-# report their covariances. This can lead to the filter rapidly jumping back and forth between each measurement as they
-# arrive. In these cases, it often makes sense to (a) correct the measurement covariances, or (b) if velocity is also
-# measured by one of the sensors, let one sensor measure pose, and the other velocity. However, doing (a) or (b) isn't
-# always feasible, and so we expose the differential parameter. When differential mode is enabled, all absolute pose
-# data is converted to velocity data by differentiating the absolute pose measurements. These velocities are then
-# integrated as usual. NOTE: this only applies to sensors that provide pose measurements; setting differential to true
-# for twist measurements has no effect.
-#    odom0_differential: false
-
-# [ADVANCED] When the node starts, if this parameter is true, then the first measurement is treated as a "zero point"
-# for all future measurements. While you can achieve the same effect with the differential paremeter, the key
-# difference is that the relative parameter doesn't cause the measurement to be converted to a velocity before
-# integrating it. If you simply want your measurements to start at 0 for a given sensor, set this to true.
-#    odom0_relative: false
-
-# If using a real robot you might want to set this to true,
-# since usually absolute measurements from real imu's are not very accurate:
-    imu0_differential: true
-    imu0_relative: false
